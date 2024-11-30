@@ -7,22 +7,18 @@ const handler = async (req, res) => {
 
 	if (req.method === "POST") {
 		try {
-			const data = req.body;
-			console.log("Gönderilen veri:", data);
-
-			if (!data || !data.name || !data.price || !data.description) {
-				throw new Error(
-					"Girdiğiniz bilgilerde hata var. Lütfen kontrol ediniz."
-				);
+			const body = await req.body;
+			if (!body) {
+				throw new Error("Bir hata oluştu!");
 			}
+			const data = await createNewData("Product", body);
 
-			const product = await createNewData("Product", data);
-
-			return res.status(200).json({
-				success: true,
-				message: "Ürün başarıyla oluşturuldu.",
-				product: product,
-			});
+			if (!data || data.error) {
+				throw new Error(data.error);
+			}
+			return res
+				.status(200)
+				.json({ status: "success", message: "api isteği başarılı" });
 		} catch (error) {
 			console.error("Hata:", error);
 			return res.status(500).json({

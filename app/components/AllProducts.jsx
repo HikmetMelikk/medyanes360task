@@ -1,13 +1,23 @@
 "use client";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { deleteAPI, getAPI } from "../services/fetchApi";
 
 export default function AllProducts() {
-	const products = [
-		{ id: 1, name: "Product 1", price: "$10", description: "Description 1" },
-		{ id: 2, name: "Product 2", price: "$20", description: "Description 2" },
-		{ id: 3, name: "Product 3", price: "$30", description: "Description 3" },
-	];
+	const [products, setProducts] = useState([]);
+
+	const getAllProducts = async () => {
+		try {
+			const data = await getAPI("/products/getAllProducts");
+			setProducts(data);
+		} catch (error) {
+			console.error("Error fetching products:", error);
+		}
+	};
+
+	useEffect(() => {
+		getAllProducts();
+	}, []);
 
 	const [deleteProductId, setDeleteProductId] = useState(null);
 
@@ -16,10 +26,15 @@ export default function AllProducts() {
 		console.log(`Edit product with id: ${productId}`);
 	};
 
-	const handleDelete = (productId) => {
-		// Delete işlemi burada yapılacak
-		console.log(`Delete product with id: ${productId}`);
-		setDeleteProductId(null); // Modalı kapat
+	const handleDelete = async (productId) => {
+		try {
+			await deleteAPI(`/products/${productId}`);
+			console.log(`Deleted product with id: ${productId}`);
+			setDeleteProductId(null);
+			getAllProducts();
+		} catch (error) {
+			console.error("Error deleting product:", error);
+		}
 	};
 
 	const confirmDelete = (productId) => {
@@ -40,9 +55,6 @@ export default function AllProducts() {
 								Name
 							</th>
 							<th className="py-2 px-4 border-b-2 border-gray-200 bg-gray-100 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">
-								Price
-							</th>
-							<th className="py-2 px-4 border-b-2 border-gray-200 bg-gray-100 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">
 								Description
 							</th>
 							<th className="py-2 px-4 border-b-2 border-gray-200 bg-gray-100 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">
@@ -60,20 +72,16 @@ export default function AllProducts() {
 									{product.name}
 								</td>
 								<td className="py-2 px-4 border-b border-gray-200 text-black">
-									{product.price}
-								</td>
-								<td className="py-2 px-4 border-b border-gray-200 text-black">
 									{product.description}
 								</td>
 								<td className="py-2 px-4 border-b border-gray-200 text-black">
-									<Link href="/dashboard/update-product">
+									<Link href={`/dashboard/update-product/${product.id}`}>
 										<button
 											onClick={() => handleEdit(product.id)}
 											className="text-blue-500 hover:text-blue-700 focus:outline-none mr-2 border border-blue-500 rounded px-2 py-1">
 											Edit
 										</button>
 									</Link>
-
 									<button
 										onClick={() => confirmDelete(product.id)}
 										className="text-red-500 hover:text-red-700 focus:outline-none border border-red-500 rounded px-2 py-1">

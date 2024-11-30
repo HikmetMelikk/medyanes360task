@@ -30,7 +30,6 @@ const postAPI = async (
 	}
 };
 
-// Öğrenci (kayıt) işlemleri için kullanılan servis
 const getAPI = async (
 	URL,
 	headers = { "Content-Type": "application/json" }
@@ -51,4 +50,46 @@ const getAPI = async (
 	return data;
 };
 
-export { getAPI, postAPI };
+const putAPI = async (
+	URL,
+	body,
+	headers = { "Content-Type": "application/json" }
+) => {
+	const data = await fetch(`${process.env.NEXT_PUBLIC_API_URL + URL}`, {
+		method: "PUT",
+		headers: headers,
+		body: JSON.stringify(body),
+		cache: "no-store",
+	})
+		.then((res) => {
+			if (res.redirected) {
+			} else {
+				return res.json();
+			}
+		})
+		.catch((err) => console.log(err));
+
+	return data;
+};
+
+const deleteAPI = async (
+	URL,
+	headers = { "Content-Type": "application/json" }
+) => {
+	const data = await fetch(`${process.env.NEXT_PUBLIC_API_URL + URL}`, {
+		method: "DELETE",
+		headers: headers,
+		cache: "no-store",
+	})
+		.then((res) => {
+			if (res.redirected) {
+			} else {
+				return res.json();
+			}
+		})
+		.catch((err) => console.log(err));
+
+	return data;
+};
+
+export { deleteAPI, getAPI, postAPI, putAPI };
