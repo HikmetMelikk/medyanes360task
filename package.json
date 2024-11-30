@@ -1,20 +1,23 @@
 {
-  "name": "medyanes360task",
-  "version": "0.1.0",
-  "private": true,
-  "scripts": {
-    "dev": "next dev --turbopack",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
-  },
-  "dependencies": {
-    "react": "19.0.0-rc-66855b96-20241106",
-    "react-dom": "19.0.0-rc-66855b96-20241106",
-    "next": "15.0.3"
-  },
-  "devDependencies": {
-    "postcss": "^8",
-    "tailwindcss": "^3.4.1"
-  }
+	"name": "medyanes360task",
+	"version": "0.1.0",
+	"private": true,
+	"scripts": {
+		"dev": "next dev --turbopack",
+		"build": "next build",
+		"start": "next start",
+		"lint": "next lint"
+	},
+	"dependencies": {
+		"@prisma/client": "6.0.0",
+		"next": "15.0.3",
+		"react": "19.0.0-rc-66855b96-20241106",
+		"react-dom": "19.0.0-rc-66855b96-20241106",
+		"react-toastify": "^10.0.6"
+	},
+	"devDependencies": {
+		"postcss": "^8",
+		"prisma": "^6.0.0",
+		"tailwindcss": "^3.4.1"
+	}
 }
