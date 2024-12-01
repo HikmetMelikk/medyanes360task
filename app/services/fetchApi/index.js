@@ -9,24 +9,42 @@ const postAPI = async (
 		if (!process.env.NEXT_PUBLIC_API_URL || !URL) {
 			throw new Error("URL bulunamadı!");
 		}
-		const data = await fetch(`${process.env.NEXT_PUBLIC_API_URL + URL}`, {
+
+		const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL + URL}`, {
 			method: method,
 			headers: headers,
 			body: JSON.stringify(body),
 			cache: "no-store",
-		})
-			.then((res) => {
-				if (res.url.includes("/notification") && res.redirected) {
-					return (window.location.href = res.url);
-				} else {
-					return res.json();
-				}
-			})
-			.catch((err) => console.log(err));
+		});
 
-		return data;
+		// Redirect durumu
+		if (response.url.includes("/notification") && response.redirected) {
+			window.location.href = response.url;
+			return { success: false, redirected: true };
+		}
+
+		// JSON yanıtını parse et
+		const data = await response.json();
+
+		// Yanıtın başarılı olup olmadığını kontrol et
+		if (!response.ok) {
+			return {
+				success: false,
+				error: data.message || "Bir hata oluştu",
+				status: response.status,
+			};
+		}
+
+		return {
+			success: true,
+			data: data,
+		};
 	} catch (err) {
-		throw new Error(`API request failed: ${err}`);
+		console.error("API request failed:", err);
+		return {
+			success: false,
+			error: err.message || "Beklenmeyen bir hata oluştu",
+		};
 	}
 };
 
