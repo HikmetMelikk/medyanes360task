@@ -5,6 +5,7 @@ import { deleteAPI, getAPI } from "../services/fetchApi";
 
 export default function AllProducts() {
 	const [products, setProducts] = useState([]);
+	const [deleteProductId, setDeleteProductId] = useState(null);
 
 	const getAllProducts = async () => {
 		try {
@@ -19,13 +20,6 @@ export default function AllProducts() {
 		getAllProducts();
 	}, []);
 
-	const [deleteProductId, setDeleteProductId] = useState(null);
-
-	const handleEdit = (productId) => {
-		// Edit işlemi burada yapılacak
-		console.log(`Edit product with id: ${productId}`);
-	};
-
 	const handleDelete = async (productId) => {
 		try {
 			await deleteAPI(`/products/${productId}`);
@@ -36,7 +30,6 @@ export default function AllProducts() {
 			console.error("Error deleting product:", error);
 		}
 	};
-
 	const confirmDelete = (productId) => {
 		setDeleteProductId(productId);
 	};
@@ -76,9 +69,7 @@ export default function AllProducts() {
 								</td>
 								<td className="py-2 px-4 border-b border-gray-200 text-black">
 									<Link href={`/dashboard/update-product/${product.id}`}>
-										<button
-											onClick={() => handleEdit(product.id)}
-											className="text-blue-500 hover:text-blue-700 focus:outline-none mr-2 border border-blue-500 rounded px-2 py-1">
+										<button className="text-blue-500 hover:text-blue-700 focus:outline-none mr-2 border border-blue-500 rounded px-2 py-1">
 											Edit
 										</button>
 									</Link>
