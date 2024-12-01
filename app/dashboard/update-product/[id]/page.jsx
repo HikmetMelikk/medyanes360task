@@ -9,7 +9,6 @@ export default function UpdateProductPage({ params }) {
 	const id = resolvedParams.id;
 
 	const [productName, setProductName] = useState("");
-	const [productPrice, setProductPrice] = useState("");
 	const [productDescription, setProductDescription] = useState("");
 
 	useEffect(() => {
@@ -17,7 +16,6 @@ export default function UpdateProductPage({ params }) {
 			try {
 				const product = await getAPI(`/products/${id}`);
 				setProductName(product.name);
-				setProductPrice(product.price);
 				setProductDescription(product.description);
 			} catch (error) {
 				console.error("Error fetching product details:", error);
@@ -34,12 +32,11 @@ export default function UpdateProductPage({ params }) {
 		try {
 			const updatedProduct = {
 				name: productName,
-				price: parseFloat(productPrice),
 				description: productDescription,
 			};
 			await putAPI(`/products/${id}`, updatedProduct);
 			console.log("Product updated successfully");
-			router.push("/dashboard/");
+			router.push("/dashboard");
 		} catch (error) {
 			console.error("Error updating product:", error);
 		}
@@ -62,19 +59,6 @@ export default function UpdateProductPage({ params }) {
 							onChange={(e) => setProductName(e.target.value)}
 							className="w-full px-3 py-2 border rounded-lg text-gray-700 focus:outline-none focus:border-blue-500"
 							placeholder="Enter product name"
-							required
-						/>
-					</div>
-					<div className="mb-6">
-						<label className="block text-gray-700 text-sm font-bold mb-2">
-							Product Price:
-						</label>
-						<input
-							type="number"
-							value={productPrice}
-							onChange={(e) => setProductPrice(e.target.value)}
-							className="w-full px-3 py-2 border rounded-lg text-gray-700 focus:outline-none focus:border-blue-500"
-							placeholder="Enter product price"
 							required
 						/>
 					</div>
