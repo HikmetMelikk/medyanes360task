@@ -20,9 +20,7 @@ export default function HomeBanner() {
 							oluşturulur.
 						</li>
 						<li>
-							Taskımdaki eksik fonksiyon sadece product update fonksiyonudur.
-							Kodlarımı repomdan inceleyebilirsiniz, hatam üzerine sizlerle
-							tartışmak ve doğrusunu öğrenmek isterim.
+							Edit butonuna tıklanarak ürün düzenlenebilir ve güncellenebilir.
 						</li>
 					</ul>
 

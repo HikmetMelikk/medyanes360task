@@ -9,24 +9,17 @@ const postAPI = async (
 		if (!process.env.NEXT_PUBLIC_API_URL || !URL) {
 			throw new Error("URL bulunamadı!");
 		}
-
 		const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL + URL}`, {
 			method: method,
 			headers: headers,
 			body: JSON.stringify(body),
 			cache: "no-store",
 		});
-
-		// Redirect durumu
 		if (response.url.includes("/notification") && response.redirected) {
 			window.location.href = response.url;
 			return { success: false, redirected: true };
 		}
-
-		// JSON yanıtını parse et
 		const data = await response.json();
-
-		// Yanıtın başarılı olup olmadığını kontrol et
 		if (!response.ok) {
 			return {
 				success: false,
@@ -73,21 +66,29 @@ const putAPI = async (
 	body,
 	headers = { "Content-Type": "application/json" }
 ) => {
-	const data = await fetch(`${process.env.NEXT_PUBLIC_API_URL + URL}`, {
-		method: "PUT",
-		headers: headers,
-		body: JSON.stringify(body),
-		cache: "no-store",
-	})
-		.then((res) => {
-			if (res.redirected) {
-			} else {
-				return res.json();
-			}
-		})
-		.catch((err) => console.log(err));
+	try {
+		const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL + URL}`, {
+			method: "PUT",
+			headers: headers,
+			body: JSON.stringify(body),
+			cache: "no-store",
+		});
+		if (!response.ok) {
+			const errorBody = await response.text();
+			throw new Error(
+				`HTTP error! status: ${response.status}, message: ${errorBody}`
+			);
+		}
+		if (response.redirected) {
+			console.warn("Request was redirected");
+			return null;
+		}
 
-	return data;
+		return await response.json();
+	} catch (err) {
+		console.error("PUT API Error:", err);
+		throw err;
+	}
 };
 
 const deleteAPI = async (

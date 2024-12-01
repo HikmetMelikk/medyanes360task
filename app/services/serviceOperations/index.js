@@ -48,12 +48,13 @@ export async function getDataByMany(tableName, where) {
 export async function updateDataByAny(tableName, where, newData) {
 	try {
 		const data = await prisma[tableName].update({
-			where: where,
+			where: { id: where },
 			data: newData,
 		});
 		return data;
 	} catch (error) {
-		return { error: error.message };
+		console.error(`Error updating ${tableName}:`, error);
+		throw error;
 	}
 }
 
